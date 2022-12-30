@@ -18,6 +18,29 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult SnowflakeId()
+    {
+        using (var client = new HttpClient())
+        {
+            client.BaseAddress = new Uri("https://localhost:7200/");
+            
+            var responseTask = client.PostAsync("snowflake-id", null);
+            responseTask.Wait();
+
+            var result = responseTask.Result;
+            if (result.IsSuccessStatusCode)
+            {
+                SnowflakeIdViewModel snowflakeId = 
+                    result.Content.ReadFromJsonAsync<SnowflakeIdViewModel>().Result;
+                ViewBag.SnowflakeId = snowflakeId;
+            }
+            else
+                ViewBag.SnowflakeId = new SnowflakeIdViewModel(123);
+        }
+        
+        return View();
+    }
+
     public IActionResult Privacy()
     {
         return View();
