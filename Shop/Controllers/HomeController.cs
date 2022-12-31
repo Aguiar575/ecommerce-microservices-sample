@@ -1,48 +1,26 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Models;
+using Shop.Services;
 
 namespace Shop.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly SnowflakeService _snowflakeService;
 
     public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;
+        _snowflakeService = new SnowflakeService();
     }
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+    public IActionResult Index() => View();
 
-    public IActionResult SnowflakeId()
+    public async Task<IActionResult> SnowflakeId()
     {
-        using (var client = new HttpClient())
-        {
-            client.BaseAddress = new Uri("https://localhost:7200/");
-            
-            var responseTask = client.PostAsync("snowflake-id", null);
-            responseTask.Wait();
-
-            var result = responseTask.Result;
-            if (result.IsSuccessStatusCode)
-            {
-                SnowflakeIdViewModel snowflakeId = 
-                    result.Content.ReadFromJsonAsync<SnowflakeIdViewModel>().Result;
-                ViewBag.SnowflakeId = snowflakeId;
-            }
-            else
-                ViewBag.SnowflakeId = new SnowflakeIdViewModel(123);
-        }
-        
-        return View();
-    }
-
-    public IActionResult Privacy()
-    {
+        ViewBag.SnowflakeId = await _snowflakeService.SnowflakeId();
         return View();
     }
 
