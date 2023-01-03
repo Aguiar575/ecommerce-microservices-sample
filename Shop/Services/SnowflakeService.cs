@@ -8,7 +8,7 @@ public class SnowflakeService
     {
         using (var client = new HttpClient())
         {
-            client.BaseAddress = new Uri("http://localhost:7200/");
+            client.BaseAddress = new Uri("http://snowflake-factory:80/");
             
             try
             {
