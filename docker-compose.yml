@@ -1,6 +1,17 @@
 version: '1.0'
 
 services: 
+  sql-server: 
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    cap_add: [ 'SYS_PTRACE' ]
+    environment:
+      - "ACCEPT_EULA=1"
+      - "MSSQL_SA_PASSWORD=Str#ng_Passw#rd"
+    ports: 
+      - 1433:1433
+    networks: 
+      - shop-env
+
   snowflake-factory:
     image: snowflake-factory
     ports: 
@@ -18,6 +29,7 @@ services:
       - shop-env
     depends_on:
       - snowflake-factory
+      - sql-server
 
 networks: 
   shop-env:
