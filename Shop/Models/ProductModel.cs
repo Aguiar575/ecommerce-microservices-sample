@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Shop.Models;
 
 public class ProductModel {
@@ -11,6 +13,7 @@ public class ProductModel {
         Name = name;
     }
 
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public ulong Id { get; set; }
     public int Price { get; set; }
     public string Name { get; set; }

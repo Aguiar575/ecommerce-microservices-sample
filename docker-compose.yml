@@ -30,6 +30,8 @@ services:
     depends_on:
       - snowflake-factory
       - sql-server
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
 
 networks: 
   shop-env:

@@ -1,22 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Shop.Context;
 using Shop.Models;
+using Shop.Services;
 
 namespace Shop.Pages.Product
 {
     public class CreateModel : PageModel
     {
-        private readonly Shop.Context.ShopContext _context;
+        private readonly ShopContext _context;
+        private readonly SnowflakeService _snowflakeService;
 
-        public CreateModel(Shop.Context.ShopContext context)
+        public CreateModel(ShopContext context)
         {
             _context = context;
+            _snowflakeService = new SnowflakeService();
         }
 
         public IActionResult OnGet()
@@ -31,13 +29,17 @@ namespace Shop.Pages.Product
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Product == null || ProductModel == null)
-            {
+            if (!ModelState.IsValid ||
+                _context.Product == null ||
+                ProductModel == null)
                 return Page();
-            }
+            
+            SnowflakeIdViewModel snowflakeId = await _snowflakeService.SnowflakeId();
+
+            ProductModel.Id = snowflakeId.id.Value;
 
             _context.Product.Add(ProductModel);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesWithIdentityInsertAsync<ProductModel>();
 
             return RedirectToPage("./Index");
         }
