@@ -4,6 +4,7 @@ using Shop.Context;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ShopContext>(options => 
     options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
@@ -40,8 +41,13 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapRazorPages();
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=pg}/{action=Index}/{id?}");
+});
 
 app.Run();
