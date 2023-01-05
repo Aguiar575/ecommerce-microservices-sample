@@ -1,6 +1,7 @@
 namespace Shop.Models;
 
 public class ProductModel {
+    public ProductModel() { }
     public ProductModel(ulong id,
         int price,
         string name)
