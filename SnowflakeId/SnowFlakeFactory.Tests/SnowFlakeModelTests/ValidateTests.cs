@@ -3,7 +3,7 @@ using SnowFlakeFactory.Model;
 using SnowFlakeFactory.Interface;
 using System.ComponentModel.DataAnnotations;
 
-namespace SnowFlakeFactoryTests.SnowFlakeModelTests;
+namespace SnowFlakeFactory.Tests.SnowFlakeModelTests;
 
 public class ValidateTests
 {

@@ -1,7 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Shop.Context;
+
+namespace ShopBackend.Context;
 
 public static class ShopContextHelper 
 {

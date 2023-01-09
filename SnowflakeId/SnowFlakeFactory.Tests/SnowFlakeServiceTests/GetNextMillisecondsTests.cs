@@ -3,7 +3,7 @@ using SnowFlakeFactory.Service;
 using SnowFlakeFactory.Interface;
 using SnowFlakeFactory.Model;
 
-namespace SnowFlakeFactoryTests.SnowFlakeServiceTests;
+namespace SnowFlakeFactory.Tests.SnowFlakeServiceTests;
 
 public class GetNextMillisecondsTests
 {

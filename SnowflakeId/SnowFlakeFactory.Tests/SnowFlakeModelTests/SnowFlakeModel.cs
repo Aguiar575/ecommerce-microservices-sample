@@ -2,7 +2,7 @@ using Moq;
 using SnowFlakeFactory.Model;
 using SnowFlakeFactory.Interface;
 
-namespace SnowFlakeFactoryTests.SnowFlakeModelTests;
+namespace SnowFlakeFactory.Tests.SnowFlakeModelTests;
 
 public class SnowFlakeModelTests
 {

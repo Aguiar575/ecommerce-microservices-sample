@@ -35,7 +35,6 @@ namespace Shop.Pages.Product
                 return Page();
             
             SnowflakeIdViewModel snowflakeId = await _snowflakeService.SnowflakeId();
-
             ProductModel.Id = snowflakeId.id.Value;
 
             _context.Product.Add(ProductModel);
