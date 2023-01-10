@@ -6,11 +6,12 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace ShopBackend.Tests.RepositoryTests;
 
-public class SaveChangesWithIdentityInsertAsync
+public class RepositoryTests
 {
+    private static ulong DefaultId = 1;
     private readonly DbContextOptions<ShopBackendContext> _options;
 
-    public SaveChangesWithIdentityInsertAsync()
+    public RepositoryTests()
     {
         _options = new DbContextOptionsBuilder<ShopBackendContext>()
                 .UseInMemoryDatabase(databaseName: "TestingDb")
@@ -100,7 +101,7 @@ public class SaveChangesWithIdentityInsertAsync
             await sut.Insert(entity);
             await sut.Save();
 
-            ProductModel? result = await sut.GetByIDAsync(1);
+            ProductModel? result = await sut.GetByIDAsync(DefaultId);
 
             Assert.Equal((ulong)1, result?.Id);
             Assert.Equal("Some Item", result?.Name);
@@ -116,7 +117,7 @@ public class SaveChangesWithIdentityInsertAsync
             CleanDatabase(context);           
             var sut = new Repository<ProductModel>(context);
 
-            ProductModel? result = await sut.GetByIDAsync(1);
+            ProductModel? result = await sut.GetByIDAsync(DefaultId);
 
             Assert.Null(result);
         }
@@ -130,7 +131,7 @@ public class SaveChangesWithIdentityInsertAsync
             CleanDatabase(context);           
             var sut = new Repository<ProductModel>(context);
 
-            ProductModel? result = await sut.GetByIDAsync(1);
+            ProductModel? result = await sut.GetByIDAsync(DefaultId);
 
             Assert.Null(result);
         }
@@ -151,7 +152,7 @@ public class SaveChangesWithIdentityInsertAsync
             await sut.Insert(entity);
             await sut.Save();
 
-            ProductModel? result = await sut.GetByIDAsync(1);
+            ProductModel? result = await sut.GetByIDAsync(DefaultId);
             sut.Delete(result);
             await sut.Save();
 
@@ -174,13 +175,13 @@ public class SaveChangesWithIdentityInsertAsync
             await sut.Insert(entity);
             await sut.Save();
 
-            ProductModel? result = await sut.GetByIDAsync(1);
+            ProductModel? result = await sut.GetByIDAsync(DefaultId);
             result.Name = "Another Name";
 
             sut.Update(result);
             await sut.Save();
 
-            ProductModel? searchAgain = await sut.GetByIDAsync(1);           
+            ProductModel? searchAgain = await sut.GetByIDAsync(DefaultId);           
             Assert.Equal("Another Name", searchAgain.Name);
         }
     }

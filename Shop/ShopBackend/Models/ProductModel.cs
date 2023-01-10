@@ -17,4 +17,9 @@ public class ProductModel {
     public ulong Id { get; set; }
     public int Price { get; set; }
     public string Name { get; set; }
+
+    public void UpdateProductValues(ProductModel product) {
+        Price = product.Price;
+        Name = product.Name;
+    }
 }

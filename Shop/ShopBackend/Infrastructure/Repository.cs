@@ -26,7 +26,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
         return await query.ToListAsync();
     }
 
-    public virtual async Task<TEntity?> GetByIDAsync(ulong id) => 
+    public virtual async Task<TEntity?> GetByIDAsync(object id) => 
         await dbSet.FindAsync(id);
 
     public virtual async Task Insert(TEntity entity) => await dbSet.AddAsync(entity);
