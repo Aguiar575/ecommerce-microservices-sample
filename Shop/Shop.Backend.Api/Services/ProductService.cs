@@ -3,7 +3,7 @@ using Shop.Backend.Api.Models;
 
 namespace Shop.Backend.Api.Services;
 
-public class ProductService {
+public class ProductService : IProductService {
     private static bool IsDbAllowedToRunProcedures = true;
     private readonly ISnowflakeService _snowflakeService;
     private readonly IRepository<ProductModel> _productRepository;
@@ -15,10 +15,12 @@ public class ProductService {
         _productRepository = productRepository;
     }
 
-    public async Task CreateProduct(ProductModel product){
-        await _productRepository.Insert(product);
+    public async Task<ProductModel?> CreateProduct(ProductModel input){
+        ProductModel? product = await _productRepository.Insert(input);
         await _productRepository
             .SaveChangesWithIdentityInsertAsync(IsDbAllowedToRunProcedures);
+
+        return product;
     }
 
     public async Task DeleteProduct(ulong id){

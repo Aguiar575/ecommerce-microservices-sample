@@ -29,7 +29,10 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     public virtual async Task<TEntity?> GetByIDAsync(object id) => 
         await dbSet.FindAsync(id);
 
-    public virtual async Task Insert(TEntity entity) => await dbSet.AddAsync(entity);
+    public virtual async Task<TEntity?> Insert(TEntity entity) {
+        var result = await dbSet.AddAsync(entity);
+        return result.Entity;
+    }
 
     public virtual void Delete(object id)
     {

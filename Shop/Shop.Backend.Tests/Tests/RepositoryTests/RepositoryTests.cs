@@ -4,7 +4,7 @@ using Shop.Backend.Api.Context;
 using Shop.Backend.Api.Infrastructure;
 using Shop.Backend.Api.Models;
 
-namespace ShopBackend.Tests.RepositoryTests;
+namespace Shop.Backend.Tests.RepositoryTests;
 
 public class RepositoryTests
 {

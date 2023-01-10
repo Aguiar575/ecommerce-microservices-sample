@@ -26,6 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shop.Backend.Api\ShopBackend.csproj" />
+    <ProjectReference Include="..\Shop.Backend.Api\Shop.Backend.Api.csproj" />
   </ItemGroup>
 </Project>
