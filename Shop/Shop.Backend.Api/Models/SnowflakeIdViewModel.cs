@@ -1,3 +1,3 @@
 namespace Shop.Backend.Api.Models;
 
-public record class SnowflakeIdViewModel (ulong? id, bool isSuccess = true);
+public record class SnowflakeIdViewModel (ulong? Id, bool IsSuccess = true);

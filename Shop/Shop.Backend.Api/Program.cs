@@ -6,6 +6,9 @@ using Shop.Backend.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddTransient<IRepository<ProductModel>, Repository<ProductModel>>();
 builder.Services.AddTransient<ISnowflakeService, SnowflakeService>();
@@ -16,17 +19,17 @@ builder.Services.AddDbContext<ShopBackendContext>(options =>
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ShopBackendContext>();
     context.Database.EnsureCreated();
-}
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 
 app.MapPost("/product", async (ProductModel input, IProductService productService) =>

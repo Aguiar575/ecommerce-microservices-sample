@@ -16,6 +16,9 @@ public class ProductService : IProductService {
     }
 
     public async Task<ProductModel?> CreateProduct(ProductModel input){
+        SnowflakeIdViewModel snowflakeId = await _snowflakeService.SnowflakeId();
+        input.Id = snowflakeId.Id.Value;
+
         ProductModel? product = await _productRepository.Insert(input);
         await _productRepository
             .SaveChangesWithIdentityInsertAsync(IsDbAllowedToRunProcedures);
