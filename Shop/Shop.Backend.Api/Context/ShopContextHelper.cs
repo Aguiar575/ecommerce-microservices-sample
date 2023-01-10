@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace ShopBackend.Context;
+namespace Shop.Backend.Api.Context;
 
 public static class ShopContextHelper 
 {

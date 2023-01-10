@@ -1,8 +1,8 @@
-using ShopBackend.Models;
-using ShopBackend.Context;
-using ShopBackend.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Shop.Backend.Api.Context;
+using Shop.Backend.Api.Infrastructure;
+using Shop.Backend.Api.Models;
 
 namespace ShopBackend.Tests.RepositoryTests;
 

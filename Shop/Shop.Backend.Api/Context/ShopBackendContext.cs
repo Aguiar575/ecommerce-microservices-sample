@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using ShopBackend.Models;
+using Shop.Backend.Api.Models;
 
-namespace ShopBackend.Context;
+namespace Shop.Backend.Api.Context;
 
 public class ShopBackendContext : DbContext
 {

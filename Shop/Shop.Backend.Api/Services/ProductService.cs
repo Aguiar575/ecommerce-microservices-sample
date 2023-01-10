@@ -1,7 +1,7 @@
-using ShopBackend.Infrastructure;
-using ShopBackend.Models;
+using Shop.Backend.Api.Infrastructure;
+using Shop.Backend.Api.Models;
 
-namespace ShopBackend.Services;
+namespace Shop.Backend.Api.Services;
 
 public class ProductService {
     private static bool IsDbAllowedToRunProcedures = true;

@@ -1,9 +1,9 @@
 using System.Data;
-using ShopBackend.Context;
+using Shop.Backend.Api.Context;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
-namespace ShopBackend.Infrastructure;
+namespace Shop.Backend.Api.Infrastructure;
 
 public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 {

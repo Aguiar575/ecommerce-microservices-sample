@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace ShopBackend.Infrastructure;
+namespace Shop.Backend.Api.Infrastructure;
 
 public interface IRepository<TEntity> where TEntity : class
 {

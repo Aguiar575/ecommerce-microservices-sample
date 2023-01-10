@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ShopBackend.Models;
+namespace Shop.Backend.Api.Models;
 
 public class ProductModel {
     public ProductModel() { }

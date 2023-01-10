@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using ShopBackend.Context;
-using ShopBackend.Infrastructure;
-using ShopBackend.Models;
-using ShopBackend.Services;
+using Shop.Backend.Api.Context;
+using Shop.Backend.Api.Infrastructure;
+using Shop.Backend.Api.Models;
+using Shop.Backend.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
