@@ -16,26 +16,17 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     }
 
     public virtual async Task<IEnumerable<TEntity>> Get(
-            Expression<Func<TEntity, bool>>? filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-            string includeProperties = "")
+            Expression<Func<TEntity, bool>>? filter = null)
     {
         IQueryable<TEntity> query = dbSet;
 
         if (filter != null)
             query = query.Where(filter);
-
-        foreach (var includeProperty in includeProperties.Split
-            (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            query = query.Include(includeProperty);
-
-        if (orderBy != null)
-            return await orderBy(query).ToListAsync();
-        else
-            return await query.ToListAsync();
+        
+        return await query.ToListAsync();
     }
 
-    public virtual async Task<TEntity?> GetByIDAsync(object id) => 
+    public virtual async Task<TEntity?> GetByIDAsync(ulong id) => 
         await dbSet.FindAsync(id);
 
     public virtual async Task Insert(TEntity entity) => await dbSet.AddAsync(entity);
@@ -64,6 +55,6 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 
     public virtual async Task Save() => await context.SaveChangesAsync();
     
-    public virtual async Task SaveChangesWithIdentityInsertAsync() => 
-        await context.SaveChangesWithIdentityInsertAsync<TEntity>();
+    public virtual async Task SaveChangesWithIdentityInsertAsync(bool IsDbAllowedToRunTransactions = true) => 
+        await context.SaveChangesWithIdentityInsertAsync<TEntity>(IsDbAllowedToRunTransactions);
 }
