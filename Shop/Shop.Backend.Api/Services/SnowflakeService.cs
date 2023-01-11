@@ -4,32 +4,29 @@ namespace Shop.Backend.Api.Services;
 
 public class SnowflakeService : ISnowflakeService
 {
+    private static string _baseUrl = "http://snowflake-factory:80/";
+    private readonly HttpClient _httpClient;
+
+    public SnowflakeService(HttpClient httpClient) =>
+        _httpClient = httpClient;
+
     public async Task<SnowflakeIdViewModel> SnowflakeId()
     {
         SnowflakeIdViewModel snowflakeId = new SnowflakeIdViewModel(null, false);
-        
-        using (var client = new HttpClient())
+
+        _httpClient.BaseAddress = new Uri(_baseUrl);
+
+        var responseTask = await _httpClient.PostAsync("snowflake-id", null);
+        responseTask.EnsureSuccessStatusCode();
+
+        if (responseTask.IsSuccessStatusCode)
         {
-            client.BaseAddress = new Uri("http://snowflake-factory:80/");
-            
-            try
-            {
-                var responseTask = await client.PostAsync("snowflake-id", null);
-                responseTask.EnsureSuccessStatusCode();
+            var snowflakeResponse = await responseTask.Content.ReadFromJsonAsync<SnowflakeIdViewModel>();
 
-                if (responseTask.IsSuccessStatusCode) {
-                    var snowflakeResponse = await responseTask.Content.ReadFromJsonAsync<SnowflakeIdViewModel>();
-
-                    if(snowflakeResponse != null)
-                        snowflakeId = snowflakeResponse;
-                }
-                    
-            }  
-            catch (HttpRequestException ex) {
-                //TODO: add log here
-            }
-
-            return snowflakeId;
+            if (snowflakeResponse != null)
+                snowflakeId = snowflakeResponse;
         }
+
+        return snowflakeId;
     }
 }

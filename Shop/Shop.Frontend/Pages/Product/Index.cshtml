@@ -14,16 +14,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ProductModel[0].Price)
+                @Html.DisplayNameFor(model => model.Product[0].Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductModel[0].Name)
+                @Html.DisplayNameFor(model => model.Product[0].Name)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.ProductModel) {
+@foreach (var item in Model.Product) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)

@@ -4,14 +4,15 @@ namespace Shop.Services;
 
 public class SnowflakeService
 {
+    private static string _baseUrl = "http://snowflake-factory:80/";
     public async Task<SnowflakeIdViewModel> SnowflakeId()
     {
         SnowflakeIdViewModel snowflakeId = new SnowflakeIdViewModel(null, false);
         
         using (var client = new HttpClient())
         {
-            client.BaseAddress = new Uri("http://snowflake-factory:80/");
-            
+            client.BaseAddress = new Uri(_baseUrl);
+
             try
             {
                 var responseTask = await client.PostAsync("snowflake-id", null);
@@ -23,7 +24,6 @@ public class SnowflakeService
                     if(snowflakeResponse != null)
                         snowflakeId = snowflakeResponse;
                 }
-                    
             }  
             catch (HttpRequestException ex) {
                 //TODO: add log here

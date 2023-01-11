@@ -21,15 +21,28 @@ services:
     expose: 
       - "80"
 
-  shop-app:
-    image: shop
+  shop-backend-api:
+    image: shop-backend-api
     ports: 
       - 8082:80
     networks: 
+      - shop-env  
+    expose: 
+      - "80"
+    depends_on:
+      - sql-server
+      - snowflake-factory
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  shop-frontend:
+    image: shop-frontend
+    ports: 
+      - 8083:80
+    networks: 
       - shop-env
     depends_on:
-      - snowflake-factory
-      - sql-server
+      - shop-backend-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
 

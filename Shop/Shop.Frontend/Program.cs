@@ -1,15 +1,13 @@
-using Microsoft.EntityFrameworkCore;
-using Shop.Context;
+using Shop.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDbContext<ShopContext>(options => 
-    options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+builder.Services.AddTransient<IShopBackendApiService, ShopBackendApiService>();
+builder.Services.AddHttpClient<IShopBackendApiService, ShopBackendApiService>();
 
 var app = builder.Build();
 
@@ -23,16 +21,6 @@ if (!app.Environment.IsDevelopment())
 else
 {
     app.UseDeveloperExceptionPage();
-    app.UseMigrationsEndPoint();
-}
-
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-
-    var context = services.GetRequiredService<ShopContext>();
-    context.Database.EnsureCreated();
-    // DbInitializer.Initialize(context);
 }
 
 app.UseHttpsRedirection();

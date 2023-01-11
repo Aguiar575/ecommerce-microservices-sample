@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddTransient<IRepository<ProductModel>, Repository<ProductModel>>();
 builder.Services.AddTransient<ISnowflakeService, SnowflakeService>();
+builder.Services.AddHttpClient<ISnowflakeService, SnowflakeService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 
 builder.Services.AddDbContext<ShopBackendContext>(options => 
@@ -31,6 +32,12 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<ShopBackendContext>();
     context.Database.EnsureCreated();
 }
+
+app.MapGet("/product", async (IProductService productService) =>
+{
+    IEnumerable<ProductModel>? product = await productService.GetProduct();
+    return Results.Ok(product);
+});
 
 app.MapPost("/product", async (ProductModel input, IProductService productService) =>
 {

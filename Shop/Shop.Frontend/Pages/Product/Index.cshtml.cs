@@ -1,32 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Shop.Context;
 using Shop.Models;
+using Shop.Services;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Shop.Pages.Product
 {
     public class IndexModel : PageModel
     {
-        private readonly Shop.Context.ShopContext _context;
+        private readonly IShopBackendApiService _shopBackendApiService;
 
-        public IndexModel(Shop.Context.ShopContext context)
-        {
-            _context = context;
-        }
+        public IndexModel(IShopBackendApiService shopBackendApiService) =>
+            _shopBackendApiService = shopBackendApiService;
 
-        public IList<ProductModel> ProductModel { get;set; } = default!;
+        public IList<ProductViewModel> Product { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            if (_context.Product != null)
-            {
-                ProductModel = await _context.Product.ToListAsync();
-            }
+            Product = new List<ProductViewModel>(
+                await _shopBackendApiService.GetProducts());
         }
     }
 }

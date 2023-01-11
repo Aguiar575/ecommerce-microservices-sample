@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Shop.Backend.Api.Infrastructure;
 using Shop.Backend.Api.Models;
 
@@ -44,4 +45,10 @@ public class ProductService : IProductService {
 
     public async Task<ProductModel?> GetProduct(ulong id) =>
         await _productRepository.GetByIDAsync(id);
+
+    public async Task<IEnumerable<ProductModel>> GetProduct(
+        Expression<Func<ProductModel, bool>>? filter = null)
+    {
+        return await _productRepository.Get(filter);
+    }
 }
