@@ -15,7 +15,7 @@ namespace Shop.Pages.Product
         public IActionResult OnGet() => Page();
 
         [BindProperty]
-        public ProductViewModel Product { get; set; } = default!;
+        public ProductCreate Product { get; set; } = default!;
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()

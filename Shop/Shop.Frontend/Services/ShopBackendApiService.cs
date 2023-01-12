@@ -1,4 +1,5 @@
-﻿using Shop.Models;
+﻿using System.Text.Json;
+using Shop.Models;
 
 namespace Shop.Services;
 
@@ -13,9 +14,13 @@ public class ShopBackendApiService : IShopBackendApiService
         _httpClient.BaseAddress = new Uri(_baseUrl);
     }
 
-    public async Task<ProductViewModel?> CreateProduct(ProductViewModel product)
+    public async Task<ProductViewModel?> CreateProduct(ProductCreate product)
     {
-        var responseTask = await _httpClient.PostAsync("product", null);
+
+        var content = new StringContent(JsonSerializer.Serialize(product),
+            System.Text.Encoding.UTF8, "application/json");
+
+        var responseTask = await _httpClient.PostAsync("product", content);
         responseTask.EnsureSuccessStatusCode();
 
         if (responseTask.IsSuccessStatusCode)

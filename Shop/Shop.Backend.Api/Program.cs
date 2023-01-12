@@ -10,6 +10,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddTransient<IRepository<ProductModel>, Repository<ProductModel>>();
 builder.Services.AddTransient<ISnowflakeService, SnowflakeService>();
 builder.Services.AddHttpClient<ISnowflakeService, SnowflakeService>();
@@ -39,7 +41,7 @@ app.MapGet("/product", async (IProductService productService) =>
     return Results.Ok(product);
 });
 
-app.MapPost("/product", async (ProductModel input, IProductService productService) =>
+app.MapPost("/product", async (ProductCreate input, IProductService productService) =>
 {
     ProductModel? product = await productService.CreateProduct(input);
     return Results.Created($"/product/{product?.Id}", product);

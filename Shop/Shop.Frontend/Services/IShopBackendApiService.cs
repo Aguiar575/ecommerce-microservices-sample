@@ -4,7 +4,7 @@ namespace Shop.Services;
 
 public interface IShopBackendApiService
 {
-    Task<ProductViewModel?> CreateProduct(ProductViewModel product);
+    Task<ProductViewModel?> CreateProduct(ProductCreate product);
     Task DeleteProduct(ulong id);
     Task UpdateProduct(ProductViewModel UpdatedProduct);
     Task<ProductViewModel?> GetProduct(ulong id);

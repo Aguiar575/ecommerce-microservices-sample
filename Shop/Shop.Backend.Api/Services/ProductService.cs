@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using AutoMapper;
 using Shop.Backend.Api.Infrastructure;
 using Shop.Backend.Api.Models;
 
@@ -8,19 +9,23 @@ public class ProductService : IProductService {
     private static bool IsDbAllowedToRunProcedures = true;
     private readonly ISnowflakeService _snowflakeService;
     private readonly IRepository<ProductModel> _productRepository;
+    private readonly IMapper _mapper;
 
     public ProductService(ISnowflakeService snowflakeService,
-        IRepository<ProductModel> productRepository)
+        IRepository<ProductModel> productRepository,
+        IMapper mapper)
     {
         _snowflakeService = snowflakeService;
         _productRepository = productRepository;
+        _mapper = mapper;
     }
 
-    public async Task<ProductModel?> CreateProduct(ProductModel input){
+    public async Task<ProductModel?> CreateProduct(ProductCreate input){
+        ProductModel newProduct = _mapper.Map<ProductModel>(input);
         SnowflakeIdViewModel snowflakeId = await _snowflakeService.SnowflakeId();
-        input.Id = snowflakeId.Id.Value;
+        newProduct.Id = snowflakeId.Id.Value;
 
-        ProductModel? product = await _productRepository.Insert(input);
+        ProductModel? product = await _productRepository.Insert(newProduct);
         await _productRepository
             .SaveChangesWithIdentityInsertAsync(IsDbAllowedToRunProcedures);
 
