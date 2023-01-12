@@ -35,7 +35,7 @@ using (var scope = app.Services.CreateScope())
     context.Database.EnsureCreated();
 }
 
-app.MapGet("/product", async (IProductService productService) =>
+app.MapGet("/products", async (IProductService productService) =>
 {
     IEnumerable<ProductModel>? product = await productService.GetProduct();
     return Results.Ok(product);
@@ -54,4 +54,15 @@ app.MapGet("/product/{id}", async (ulong id, IProductService productService) =>
     return Results.Ok(product);
 });
 
+app.MapPut("/product", async (ProductUpdate productUpdate, IProductService productService) =>
+{
+    await productService.UpdateProduct(productUpdate);
+    return Results.Ok();
+});
+
+app.MapDelete("/product/{id}", async (ulong id, IProductService productService) =>
+{
+    await productService.DeleteProduct(id);
+    return Results.Ok();
+});
 app.Run();

@@ -16,7 +16,7 @@ public class ShopBackendApiService : IShopBackendApiService
 
     public async Task<ProductViewModel?> CreateProduct(ProductCreate product)
     {
-
+        ProductViewModel? productResponse = null;
         var content = new StringContent(JsonSerializer.Serialize(product),
             System.Text.Encoding.UTF8, "application/json");
 
@@ -24,41 +24,51 @@ public class ShopBackendApiService : IShopBackendApiService
         responseTask.EnsureSuccessStatusCode();
 
         if (responseTask.IsSuccessStatusCode)
-        {
-            var productResponse = await responseTask.Content.ReadFromJsonAsync<ProductViewModel>();
-            return productResponse;
-        }
+            productResponse = await responseTask.Content.ReadFromJsonAsync<ProductViewModel>();
 
-        return null;
+        return productResponse;
     }
 
-    public Task DeleteProduct(ulong id)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task DeleteProduct(ulong id) =>
+        await _httpClient.DeleteAsync($"product/{id}");
 
-    public Task<ProductViewModel?> GetProduct(ulong id)
+    public async Task<ProductViewModel?> GetProduct(ulong id)
     {
-        throw new NotImplementedException();
+        ProductViewModel? productResponse = null;
+
+        var responseTask = await _httpClient.GetAsync($"product/{id}");
+        responseTask.EnsureSuccessStatusCode();
+
+        if (responseTask.IsSuccessStatusCode)
+            productResponse = await responseTask.Content.ReadFromJsonAsync<ProductViewModel>();
+
+        return productResponse;
     }
 
     public async Task<IEnumerable<ProductViewModel>> GetProducts()
     {
         List<ProductViewModel> products = new List<ProductViewModel>();
-        var responseTask = await _httpClient.GetAsync("product");
+        var responseTask = await _httpClient.GetAsync("products");
         responseTask.EnsureSuccessStatusCode();
 
         if (responseTask.IsSuccessStatusCode)
         {
-            var productResponse = await responseTask.Content.ReadFromJsonAsync<IEnumerable<ProductViewModel>>();
+            var productResponse = 
+                await responseTask.Content.ReadFromJsonAsync<IEnumerable<ProductViewModel>>()
+                ?? new List<ProductViewModel>();
+
             products.AddRange(productResponse);
         }
 
         return products;
     }
 
-    public Task UpdateProduct(ProductViewModel UpdatedProduct)
+    public async Task UpdateProduct(ProductViewModel UpdatedProduct)
     {
-        throw new NotImplementedException();
+        var content = new StringContent(JsonSerializer.Serialize(UpdatedProduct),
+            System.Text.Encoding.UTF8, "application/json");
+
+        var responseTask = await _httpClient.PutAsync("product", content);
+        responseTask.EnsureSuccessStatusCode();
     }
 }

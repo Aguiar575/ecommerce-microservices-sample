@@ -13,12 +13,23 @@ public class ProductModel {
         Name = name;
     }
 
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public ulong Id { get; set; }
+    private ulong? _id;
+    public ulong? Id 
+    { 
+        get { return _id; }
+        set 
+        {
+            if(_id == null)
+                _id = value;
+            else
+                throw new InvalidOperationException(
+                    "Id already set, cannot be changed");
+        } 
+    }
     public int Price { get; set; }
     public string Name { get; set; }
 
-    public void UpdateProductValues(ProductModel product) {
+    public void UpdateProductValues(ProductUpdate product) {
         Price = product.Price;
         Name = product.Name;
     }

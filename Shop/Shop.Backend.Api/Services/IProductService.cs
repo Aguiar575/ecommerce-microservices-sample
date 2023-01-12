@@ -6,7 +6,7 @@ namespace Shop.Backend.Api.Services;
 public interface IProductService {
     Task<ProductModel?> CreateProduct(ProductCreate product);
     Task DeleteProduct(ulong id);
-    Task UpdateProduct(ProductModel UpdatedProduct);
+    Task UpdateProduct(ProductUpdate productUpdate);
     Task<ProductModel?> GetProduct(ulong id);
     Task<IEnumerable<ProductModel>> GetProduct(
         Expression<Func<ProductModel, bool>>? filter = null);

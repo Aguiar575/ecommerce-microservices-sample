@@ -23,7 +23,7 @@ public class ProductService : IProductService {
     public async Task<ProductModel?> CreateProduct(ProductCreate input){
         ProductModel newProduct = _mapper.Map<ProductModel>(input);
         SnowflakeIdViewModel snowflakeId = await _snowflakeService.SnowflakeId();
-        newProduct.Id = snowflakeId.Id.Value;
+        newProduct.Id = snowflakeId.Id;
 
         ProductModel? product = await _productRepository.Insert(newProduct);
         await _productRepository
@@ -37,12 +37,12 @@ public class ProductService : IProductService {
         await _productRepository.Save();
     }
 
-    public async Task UpdateProduct(ProductModel UpdatedProduct) {
+    public async Task UpdateProduct(ProductUpdate productUpdate) {
         ProductModel? actualProduct = 
-            await _productRepository.GetByIDAsync(UpdatedProduct.Id);
+            await _productRepository.GetByIDAsync(productUpdate.Id);
         
         if(actualProduct != null){
-            actualProduct.UpdateProductValues(UpdatedProduct);
+            actualProduct.UpdateProductValues(productUpdate);
             _productRepository.Update(actualProduct);
             await _productRepository.Save();
         }
