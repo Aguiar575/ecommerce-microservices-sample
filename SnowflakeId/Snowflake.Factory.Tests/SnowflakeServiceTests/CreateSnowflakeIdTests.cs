@@ -1,15 +1,15 @@
 using Moq;
-using SnowFlakeFactory.Service;
-using SnowFlakeFactory.Interface;
-using SnowFlakeFactory.Model;
+using Snowflake.Factory.Model;
+using Snowflake.Factory.Provider;
+using Snowflake.Factory.Service;
 
 namespace SnowFlakeFactory.Tests.SnowFlakeServiceTests;
 
 public class CreateSnowflakeIdTests
 {
     private static readonly DateTime DefaultEpoch = new DateTime(1, 1, 1);
-    Mock<IDateTimeProvider> _dateTimeProvider;
 
+    Mock<IDateTimeProvider> _dateTimeProvider;
     public CreateSnowflakeIdTests() =>
         _dateTimeProvider = new Mock<IDateTimeProvider>();
 
@@ -23,8 +23,8 @@ public class CreateSnowflakeIdTests
                                                                         ulong expectedSnowflakeId)
     {
         _dateTimeProvider.Setup(e => e.GetUtcNow()).Returns(DateTime.Parse(now));
-        var model = new SnowFlakeModel(new DateTimeProvider()) { Epoch = DefaultEpoch };
-        var snowflakeService = new SnowFlakeIdService(model, _dateTimeProvider.Object);
+        var model = new SnowflakeModel(new DateTimeProvider()) { Epoch = DefaultEpoch };
+        var snowflakeService = new SnowflakeIdService(model, _dateTimeProvider.Object);
 
         var snowflakeId = snowflakeService.CreateSnowflakeId();
 
@@ -36,18 +36,18 @@ public class CreateSnowflakeIdTests
     {
         _dateTimeProvider.Setup(e => e.GetUtcNow())
                          .Returns(new DateTime(2000, 1, 1));
-        var modelOne = new SnowFlakeModel(new DateTimeProvider())
+        var modelOne = new SnowflakeModel(new DateTimeProvider())
         {
             Epoch = DefaultEpoch,
             DatacenterId = 1
         };
-        var modelTwo = new SnowFlakeModel(new DateTimeProvider())
+        var modelTwo = new SnowflakeModel(new DateTimeProvider())
         {
             Epoch = DefaultEpoch,
             DatacenterId = 2
         };
-        var snowflakeService1 = new SnowFlakeIdService(modelOne, _dateTimeProvider.Object);
-        var snowflakeService2 = new SnowFlakeIdService(modelTwo, _dateTimeProvider.Object);
+        var snowflakeService1 = new SnowflakeIdService(modelOne, _dateTimeProvider.Object);
+        var snowflakeService2 = new SnowflakeIdService(modelTwo, _dateTimeProvider.Object);
         var snowflakeId1 = snowflakeService1.CreateSnowflakeId();
         var snowflakeId2 = snowflakeService2.CreateSnowflakeId();
 
@@ -59,18 +59,18 @@ public class CreateSnowflakeIdTests
     {
         _dateTimeProvider.Setup(e => e.GetUtcNow())
                          .Returns(new DateTime(2000, 1, 1));
-        var modelOne = new SnowFlakeModel(new DateTimeProvider())
+        var modelOne = new SnowflakeModel(new DateTimeProvider())
         {
             Epoch = DefaultEpoch,
             WorkerId = 1
         };
-        var modelTwo = new SnowFlakeModel(new DateTimeProvider())
+        var modelTwo = new SnowflakeModel(new DateTimeProvider())
         {
             Epoch = DefaultEpoch,
             WorkerId = 2
         };
-        var snowflakeService1 = new SnowFlakeIdService(modelOne, _dateTimeProvider.Object);
-        var snowflakeService2 = new SnowFlakeIdService(modelTwo, _dateTimeProvider.Object);
+        var snowflakeService1 = new SnowflakeIdService(modelOne, _dateTimeProvider.Object);
+        var snowflakeService2 = new SnowflakeIdService(modelTwo, _dateTimeProvider.Object);
         var snowflakeId1 = snowflakeService1.CreateSnowflakeId();
         var snowflakeId2 = snowflakeService2.CreateSnowflakeId();
 
@@ -80,8 +80,8 @@ public class CreateSnowflakeIdTests
     [Fact]
     public void CreateSnowflakeId_Default_Should_Not_Generate_Zero_Or_Negative_Ids()
     {
-        var model = new SnowFlakeModel(new DateTimeProvider()) { Epoch = DefaultEpoch };
-        var snowflakeService = new SnowFlakeIdService(model, new DateTimeProvider());
+        var model = new SnowflakeModel(new DateTimeProvider()) { Epoch = DefaultEpoch };
+        var snowflakeService = new SnowflakeIdService(model, new DateTimeProvider());
         for (var i = 0; i < 1_000_000; i++)
         {
             var snowflakeId = snowflakeService.CreateSnowflakeId();
@@ -92,8 +92,8 @@ public class CreateSnowflakeIdTests
     [Fact]
     public void CreateSnowflakeId_Default_Should_Generate_Sequential_Ids()
     {
-        var model = new SnowFlakeModel(new DateTimeProvider()) { Epoch = DefaultEpoch };
-        var snowflakeService = new SnowFlakeIdService(model, new DateTimeProvider());
+        var model = new SnowflakeModel(new DateTimeProvider()) { Epoch = DefaultEpoch };
+        var snowflakeService = new SnowflakeIdService(model, new DateTimeProvider());
 
         ulong? snowflakeId = null;
         ulong? lastSnowflakeId = null;
@@ -121,8 +121,8 @@ public class CreateSnowflakeIdTests
             .Setup(e => e.GetUtcNow())
             .Returns(new DateTime(2000, 1, 1).AddMilliseconds(-1));
 
-        var model = new SnowFlakeModel(new DateTimeProvider()) { Epoch = DefaultEpoch };
-        var snowflakeService = new SnowFlakeIdService(model, _dateTimeProvider.Object);
+        var model = new SnowflakeModel(new DateTimeProvider()) { Epoch = DefaultEpoch };
+        var snowflakeService = new SnowflakeIdService(model, _dateTimeProvider.Object);
         snowflakeService.CreateSnowflakeId();
 
         Assert.Throws<InvalidOperationException>(() => snowflakeService.CreateSnowflakeId());

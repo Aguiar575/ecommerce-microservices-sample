@@ -1,6 +1,4 @@
-using SnowFlakeFactory.Interface;
-
-namespace SnowFlakeFactory.Service;
+namespace Snowflake.Factory.Provider;
 
 public class DateTimeProvider : IDateTimeProvider 
 {

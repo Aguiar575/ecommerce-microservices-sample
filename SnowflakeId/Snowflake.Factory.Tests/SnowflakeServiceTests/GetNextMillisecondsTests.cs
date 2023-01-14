@@ -1,7 +1,7 @@
 using Moq;
-using SnowFlakeFactory.Service;
-using SnowFlakeFactory.Interface;
-using SnowFlakeFactory.Model;
+using Snowflake.Factory.Model;
+using Snowflake.Factory.Service;
+using Snowflake.Factory.Provider;
 
 namespace SnowFlakeFactory.Tests.SnowFlakeServiceTests;
 
@@ -23,8 +23,8 @@ public class GetNextMillisecondsTests
         _dateTimeProvider.Setup(e => e.GetToday()).Returns(getToday);
         _dateTimeProvider.Setup(e => e.GetUtcNow()).Returns(getUtcNow);
 
-        var snowFlakeModel = new SnowFlakeModel(_dateTimeProvider.Object) { Epoch = epoch };
-        var sut = new SnowFlakeIdService(snowFlakeModel, _dateTimeProvider.Object);
+        var model = new SnowflakeModel(_dateTimeProvider.Object) { Epoch = epoch };
+        var sut = new SnowflakeIdService(model, _dateTimeProvider.Object);
 
         ulong result = sut.GetNextMilliseconds(_lastTimestamp);
 
@@ -49,8 +49,8 @@ public class GetNextMillisecondsTests
             .Setup(e => e.GetUtcNow())
             .Returns(new DateTime(2012, 12, 20, 21, 15, 30, 420));
 
-        var snowFlakeModel = new SnowFlakeModel(_dateTimeProvider.Object) { Epoch = epoch };
-        var sut = new SnowFlakeIdService(snowFlakeModel, _dateTimeProvider.Object);
+        var model = new SnowflakeModel(_dateTimeProvider.Object) { Epoch = epoch };
+        var sut = new SnowflakeIdService(model, _dateTimeProvider.Object);
 
         ulong result = sut.GetNextMilliseconds(_lastTimestamp);
 

@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SnowFlakeFactory\SnowFlakeFactory.csproj" />
+    <ProjectReference Include="..\Snowflake.Factory\Snowflake.Factory.csproj" />
   </ItemGroup>
 
 </Project>

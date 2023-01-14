@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using SnowFlakeFactory.Interface;
-using SnowFlakeFactory.Service;
+using Snowflake.Factory.Provider;
 
-namespace SnowFlakeFactory.Model;
+namespace Snowflake.Factory.Model;
 
-public class SnowFlakeModel
+public class SnowflakeModel
 {
     private int _datacenterIdBits = 4;
     private int _workerIdBits = 6;
@@ -64,10 +63,10 @@ public class SnowFlakeModel
             }
         }
 
-    public SnowFlakeModel() =>
+    public SnowflakeModel() =>
         _dateTimeProvider = new DateTimeProvider();
 
-    public SnowFlakeModel(IDateTimeProvider dateTimeProvider) =>
+    public SnowflakeModel(IDateTimeProvider dateTimeProvider) =>
         _dateTimeProvider = dateTimeProvider;
 
     public void Validate()

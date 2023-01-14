@@ -1,6 +1,6 @@
 using Moq;
-using SnowFlakeFactory.Model;
-using SnowFlakeFactory.Interface;
+using Snowflake.Factory.Model;
+using Snowflake.Factory.Provider;
 using System.ComponentModel.DataAnnotations;
 
 namespace SnowFlakeFactory.Tests.SnowFlakeModelTests;
@@ -19,7 +19,7 @@ public class ValidateTests
         DateTime epoch = new DateTime(2012, 12, 20, 20, 30, 30, 663);
         _dateTimeProvider.Setup(e => e.GetToday()).Returns(getToday);
 
-        var sut = new SnowFlakeModel(_dateTimeProvider.Object){
+        var sut = new SnowflakeModel(_dateTimeProvider.Object){
                 Epoch = epoch,
                 DatacenterId = 16
             };
@@ -34,7 +34,7 @@ public class ValidateTests
         DateTime epoch = new DateTime(2012, 12, 20, 20, 30, 30, 663);
         _dateTimeProvider.Setup(e => e.GetToday()).Returns(getToday);
 
-        var sut = new SnowFlakeModel(_dateTimeProvider.Object){
+        var sut = new SnowflakeModel(_dateTimeProvider.Object){
                 Epoch = epoch,
                 WorkerId = 64
             };

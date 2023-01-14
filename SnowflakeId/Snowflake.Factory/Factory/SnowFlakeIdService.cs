@@ -1,9 +1,9 @@
-﻿using SnowFlakeFactory.Model;
-using SnowFlakeFactory.Interface;
+﻿using Snowflake.Factory.Model;
+using Snowflake.Factory.Provider;
 
-namespace SnowFlakeFactory.Service;
+namespace Snowflake.Factory.Service;
 
-public class SnowFlakeIdService
+public class SnowflakeIdService
 {
     private const int SEQUENCE_BITS = 12;
     private readonly int _workerIdShift;
@@ -13,11 +13,11 @@ public class SnowFlakeIdService
     private ulong _lastTimestamp;
     private ulong _sequence;
 
-    private SnowFlakeModel _snowFlakeModel;
+    private SnowflakeModel _snowFlakeModel;
     private readonly IDateTimeProvider _dateTimeProvider;
 
-    public SnowFlakeIdService(
-        SnowFlakeModel snowFlakeModel,
+    public SnowflakeIdService(
+        SnowflakeModel snowFlakeModel,
         IDateTimeProvider dateTimeProvider) 
     {
         snowFlakeModel.Validate();

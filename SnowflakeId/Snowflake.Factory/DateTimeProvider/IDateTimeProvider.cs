@@ -1,4 +1,4 @@
-namespace SnowFlakeFactory.Interface;
+namespace Snowflake.Factory.Provider;
 
 public interface IDateTimeProvider {
     DateTime GetUtcNow();

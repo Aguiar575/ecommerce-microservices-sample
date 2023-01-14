@@ -1,6 +1,6 @@
 using Moq;
-using SnowFlakeFactory.Model;
-using SnowFlakeFactory.Interface;
+using Snowflake.Factory.Model;
+using Snowflake.Factory.Provider;
 
 namespace SnowFlakeFactory.Tests.SnowFlakeModelTests;
 
@@ -19,7 +19,7 @@ public class SnowFlakeModelTests
         _dateTimeProvider.Setup(e => e.GetToday()).Returns(getToday);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => 
-            new SnowFlakeModel(_dateTimeProvider.Object){
+            new SnowflakeModel(_dateTimeProvider.Object){
                 Epoch = epoch,
                 DatacenterIdBits = 1,
                 WorkerIdBits = 1
@@ -34,7 +34,7 @@ public class SnowFlakeModelTests
         _dateTimeProvider.Setup(e => e.GetToday()).Returns(getToday);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => 
-            new SnowFlakeModel(_dateTimeProvider.Object){
+            new SnowflakeModel(_dateTimeProvider.Object){
                 Epoch = epoch,
                 DatacenterIdBits = 0,
                 WorkerIdBits = 1
@@ -49,7 +49,7 @@ public class SnowFlakeModelTests
         _dateTimeProvider.Setup(e => e.GetToday()).Returns(getToday);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => 
-            new SnowFlakeModel(_dateTimeProvider.Object){
+            new SnowflakeModel(_dateTimeProvider.Object){
                 Epoch = epoch,
                 DatacenterIdBits = 1,
                 WorkerIdBits = 0
