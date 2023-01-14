@@ -1,4 +1,5 @@
-﻿using Shop.Backend.Api.Models;
+﻿using Shop.Backend.Api.Dto;
+using Shop.Backend.Api.Models;
 
 namespace Shop.Backend.Api.Services;
 
@@ -10,9 +11,9 @@ public class SnowflakeService : ISnowflakeService
     public SnowflakeService(HttpClient httpClient) =>
         _httpClient = httpClient;
 
-    public async Task<SnowflakeIdViewModel> SnowflakeId()
+    public async Task<SnowflakeIdRequest> SnowflakeId()
     {
-        SnowflakeIdViewModel snowflakeId = new SnowflakeIdViewModel(null, false);
+        SnowflakeIdRequest snowflakeId = new SnowflakeIdRequest(null, false);
 
         _httpClient.BaseAddress = new Uri(_baseUrl);
 
@@ -21,7 +22,7 @@ public class SnowflakeService : ISnowflakeService
 
         if (responseTask.IsSuccessStatusCode)
         {
-            var snowflakeResponse = await responseTask.Content.ReadFromJsonAsync<SnowflakeIdViewModel>();
+            var snowflakeResponse = await responseTask.Content.ReadFromJsonAsync<SnowflakeIdRequest>();
 
             if (snowflakeResponse != null)
                 snowflakeId = snowflakeResponse;

@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
+using Shop.Backend.Api.Dto;
 
 namespace Shop.Backend.Api.Models;
 

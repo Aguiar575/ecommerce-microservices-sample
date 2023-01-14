@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Shop.Backend.Api.Dto;
 using Shop.Backend.Api.Infrastructure;
 using Shop.Backend.Api.Models;
 
@@ -22,7 +23,7 @@ public class ProductService : IProductService {
 
     public async Task<ProductModel?> CreateProduct(ProductCreate input){
         ProductModel newProduct = _mapper.Map<ProductModel>(input);
-        SnowflakeIdViewModel snowflakeId = await _snowflakeService.SnowflakeId();
+        SnowflakeIdRequest snowflakeId = await _snowflakeService.SnowflakeId();
         newProduct.Id = snowflakeId.Id;
 
         ProductModel? product = await _productRepository.Insert(newProduct);

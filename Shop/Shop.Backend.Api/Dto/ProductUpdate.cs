@@ -1,4 +1,4 @@
-namespace Shop.Backend.Api.Models;
+namespace Shop.Backend.Api.Dto;
 
 public class ProductUpdate
  {
