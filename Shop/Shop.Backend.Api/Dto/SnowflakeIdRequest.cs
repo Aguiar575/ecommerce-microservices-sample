@@ -1,3 +1,3 @@
 namespace Shop.Backend.Api.Dto;
 
-public record class SnowflakeIdRequest (ulong? Id, bool IsSuccess = true);
+public record struct SnowflakeIdRequest (ulong? Id, bool IsSuccess = true);

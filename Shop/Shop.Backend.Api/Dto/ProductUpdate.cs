@@ -1,8 +1,3 @@
 namespace Shop.Backend.Api.Dto;
 
-public class ProductUpdate
- {
-    public ulong Id { get; set; }
-    public int Price { get; set; }
-    public string Name { get; set; }
-}
+public record struct ProductUpdate(ulong Id, int Price, string Name);
