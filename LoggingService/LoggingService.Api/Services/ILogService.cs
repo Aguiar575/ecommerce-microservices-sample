@@ -1,6 +1,6 @@
-using LoggingService.Dto;
+using LoggingService.Api.Dto;
 
-namespace LoggingService.Services;
+namespace LoggingService.Api.Services;
 
 public interface ILogService
 {

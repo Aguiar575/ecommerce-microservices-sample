@@ -1,7 +1,7 @@
 using Serilog;
-using Infrastructure;
-using LoggingService.Dto;
-using LoggingService.Services;
+using LoggingService.Api.Dto;
+using LoggingService.Api.Services;
+using LoggingService.Api.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

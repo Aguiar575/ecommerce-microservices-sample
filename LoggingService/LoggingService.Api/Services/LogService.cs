@@ -1,8 +1,8 @@
-using LoggingService.Dto;
+using LoggingService.Api.Dto;
 
-namespace LoggingService.Services;
+namespace LoggingService.Api.Services;
 
-class LogService : ILogService
+public class LogService : ILogService
 {
     private readonly ILogger<LogService> _logger;
 
@@ -22,7 +22,7 @@ class LogService : ILogService
     public async Task LogError(LogRequest request)
     {
         await Task.Run(() => 
-            _logger.LogInformation($"Log Level: Information ApplicationName: {request.ApplicationName} " +
+            _logger.LogError($"Log Level: Information ApplicationName: {request.ApplicationName} " +
                                    $"Message: {request.Message} " +
                                    $"InnerMessage: {request.InnerMessage} " +
                                    $"Stacktrace: {request.StackTrace} " +

@@ -3,7 +3,7 @@ using Serilog;
 using Serilog.Exceptions;
 using Serilog.Sinks.Elasticsearch;
 
-namespace Infrastructure;
+namespace LoggingService.Api.Infrastructure;
 
 public static class LogConfiguration {
 public static void ConfigureLogging()
