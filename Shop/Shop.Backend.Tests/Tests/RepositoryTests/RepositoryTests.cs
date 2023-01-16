@@ -37,29 +37,8 @@ public class RepositoryTests
             await sut.Insert(entity);
             await sut.SaveChangesWithIdentityInsertAsync(IsDbAllowedToRunTransactions: false);
 
-            Assert.Equal(1, context.Product.Count());
+            Assert.Equal((int)DefaultId, context.Product.Count());
             Assert.True(context.Product.Any(e => e.Id == explicitId));
-        }
-    }
-
-    [Fact]
-    public async void Insert_Should_Save_ProductModel_With_Implicit_Id()
-    {
-        using (var context = new ShopBackendContext(_options))
-        {
-            CleanDatabase(context);           
-            var sut = new Repository<ProductModel>(context);
-
-            var entity = new ProductModel(){
-                Price = 23,
-                Name = "Some Item"
-            };
-
-            await sut.Insert(entity);
-            await sut.Save();
-
-            Assert.Equal(1, context.Product.Count());
-            Assert.True(context.Product.Any(e => e.Id == 1));
         }
     }
 
@@ -71,18 +50,18 @@ public class RepositoryTests
             CleanDatabase(context);           
             var sut = new Repository<ProductModel>(context);
 
-            var entity = new ProductModel(){
-                Price = 23,
-                Name = "Some Item"
-            };
+            var entity = new ProductModel(
+                DefaultId,
+                23,
+                "Some Item");
 
             await sut.Insert(entity);
             await sut.Save();
 
-            IEnumerable<ProductModel> result = await sut.Get(e => e.Id == 1);
+            IEnumerable<ProductModel> result = await sut.Get(e => e.Id == DefaultId);
 
-            Assert.Equal(1, result.Count());
-            Assert.True(result.Any(e => e.Id == 1));
+            Assert.Equal((int)DefaultId, result.Count());
+            Assert.True(result.Any(e => e.Id == DefaultId));
         }
     }
 
@@ -94,16 +73,16 @@ public class RepositoryTests
             CleanDatabase(context);           
             var sut = new Repository<ProductModel>(context);
 
-            var entity = new ProductModel(){
-                Price = 23,
-                Name = "Some Item"
-            };
+            var entity = new ProductModel(
+                DefaultId,
+                23,
+                "Some Item");
             await sut.Insert(entity);
             await sut.Save();
 
             ProductModel? result = await sut.GetByIDAsync(DefaultId);
 
-            Assert.Equal((ulong)1, result?.Id);
+            Assert.Equal(DefaultId, result?.Id);
             Assert.Equal("Some Item", result?.Name);
 
         }
@@ -145,10 +124,11 @@ public class RepositoryTests
             CleanDatabase(context);           
             var sut = new Repository<ProductModel>(context);
 
-            var entity = new ProductModel(){
-                Price = 23,
-                Name = "Some Item"
-            };
+            var entity = new ProductModel(
+                DefaultId,
+                23,
+                "Some Item");
+
             await sut.Insert(entity);
             await sut.Save();
 
@@ -168,10 +148,11 @@ public class RepositoryTests
             CleanDatabase(context);           
             var sut = new Repository<ProductModel>(context);
 
-            var entity = new ProductModel(){
-                Price = 23,
-                Name = "Some Item"
-            };
+            var entity = new ProductModel(
+                DefaultId,
+                23,
+                "Some Item");
+
             await sut.Insert(entity);
             await sut.Save();
 

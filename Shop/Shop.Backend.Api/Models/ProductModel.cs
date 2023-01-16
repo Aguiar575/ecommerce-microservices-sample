@@ -3,7 +3,7 @@ using Shop.Backend.Api.Dto;
 namespace Shop.Backend.Api.Models;
 
 public class ProductModel {
-    public ProductModel() { }
+    internal ProductModel() { }
     public ProductModel(ulong id,
         int price,
         string name)
@@ -29,8 +29,8 @@ public class ProductModel {
     public int Price { get; set; }
     public string Name { get; set; }
 
-    public void UpdateProductValues(ProductUpdate product) {
-        Price = product.Price;
-        Name = product.Name;
-    }
+    public ProductModel? UpdateProductValues(ProductUpdate product) =>
+        this.Id is not null ? 
+        new ProductModel(this.Id.Value, product.Price, product.Name) :
+        null;
 }

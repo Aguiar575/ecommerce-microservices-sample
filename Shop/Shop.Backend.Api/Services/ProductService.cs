@@ -42,10 +42,12 @@ public class ProductService : IProductService {
         ProductModel? actualProduct = 
             await _productRepository.GetByIDAsync(productUpdate.Id);
         
-        if(actualProduct != null){
-            actualProduct.UpdateProductValues(productUpdate);
-            _productRepository.Update(actualProduct);
-            await _productRepository.Save();
+        if(actualProduct is not null){
+            actualProduct = actualProduct.UpdateProductValues(productUpdate);
+            if(actualProduct is not null){
+                _productRepository.Update(actualProduct);
+                await _productRepository.Save();
+            }
         }
     }
 
