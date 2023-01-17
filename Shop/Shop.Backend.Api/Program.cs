@@ -18,8 +18,15 @@ builder.Services.AddTransient<ISnowflakeService, SnowflakeService>();
 builder.Services.AddHttpClient<ISnowflakeService, SnowflakeService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 
+string connectionString = $"Server={builder.Configuration["SqlServerCredentials:Server"]}, " + 
+                        $"{builder.Configuration["SqlServerCredentials:Port"]};" +
+                        $"Initial Catalog={builder.Configuration["SqlServerCredentials:Schema"]};" +
+                        $"User ID={builder.Configuration["SqlServerCredentials:User"]};" +
+                        $"Password={builder.Configuration["SqlServerCredentials:Password"]};" +
+                        $"TrustServerCertificate=true";
+
 builder.Services.AddDbContext<ShopBackendContext>(options => 
-    options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+    options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 

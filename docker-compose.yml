@@ -67,6 +67,12 @@ services:
     depends_on:
       - sql-server
       - snowflake-factory
+    environment:
+      - "SqlServerCredentials:Server=sql-server"
+      - "SqlServerCredentials:Port=1433"
+      - "SqlServerCredentials:Schema=ShopDb"
+      - "SqlServerCredentials:User=sa"
+      - "SqlServerCredentials:Password=Str#ng_Passw#rd"
 
   shop-frontend:
     image: shop-frontend
