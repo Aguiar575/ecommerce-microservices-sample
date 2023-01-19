@@ -8,14 +8,15 @@ public class SnowflakeService : ISnowflakeService
     private static string _baseUrl = "http://snowflake-factory:80/";
     private readonly HttpClient _httpClient;
 
-    public SnowflakeService(HttpClient httpClient) =>
+    public SnowflakeService(HttpClient httpClient) 
+    {
         _httpClient = httpClient;
+        _httpClient.BaseAddress = new Uri(_baseUrl);
+    }
 
     public async Task<SnowflakeIdRequest> SnowflakeId()
     {
         SnowflakeIdRequest snowflakeId = new SnowflakeIdRequest(null, false);
-
-        _httpClient.BaseAddress = new Uri(_baseUrl);
 
         var responseTask = await _httpClient.PostAsync("snowflake-id", null);
         responseTask.EnsureSuccessStatusCode();

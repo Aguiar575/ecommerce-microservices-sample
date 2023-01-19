@@ -1,6 +1,6 @@
-namespace Shop.Models;
+namespace Shop.Dto;
 
-public class ProductCreate 
+public record struct ProductCreate
 {
     public int Price { get; set; }
     public string Name { get; set; }

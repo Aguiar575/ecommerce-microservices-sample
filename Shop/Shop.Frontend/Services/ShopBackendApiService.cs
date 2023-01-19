@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Newtonsoft.Json;
+using Shop.Dto;
 using Shop.Models;
 
 namespace Shop.Services;
@@ -17,14 +18,16 @@ public class ShopBackendApiService : IShopBackendApiService
     public async Task<ProductViewModel?> CreateProduct(ProductCreate product)
     {
         ProductViewModel? productResponse = null;
-        var content = new StringContent(JsonSerializer.Serialize(product),
+        var content = new StringContent(JsonConvert.SerializeObject(product),
             System.Text.Encoding.UTF8, "application/json");
 
         var responseTask = await _httpClient.PostAsync("product", content);
-        responseTask.EnsureSuccessStatusCode();
 
         if (responseTask.IsSuccessStatusCode)
-            productResponse = await responseTask.Content.ReadFromJsonAsync<ProductViewModel>();
+        {
+            var responseJson = await responseTask.Content.ReadAsStringAsync();
+            productResponse = JsonConvert.DeserializeObject<ProductViewModel>(responseJson);
+        }
 
         return productResponse;
     }
@@ -37,7 +40,6 @@ public class ShopBackendApiService : IShopBackendApiService
         ProductViewModel? productResponse = null;
 
         var responseTask = await _httpClient.GetAsync($"product/{id}");
-        responseTask.EnsureSuccessStatusCode();
 
         if (responseTask.IsSuccessStatusCode)
             productResponse = await responseTask.Content.ReadFromJsonAsync<ProductViewModel>();
@@ -49,7 +51,6 @@ public class ShopBackendApiService : IShopBackendApiService
     {
         List<ProductViewModel> products = new List<ProductViewModel>();
         var responseTask = await _httpClient.GetAsync("products");
-        responseTask.EnsureSuccessStatusCode();
 
         if (responseTask.IsSuccessStatusCode)
         {
@@ -65,10 +66,9 @@ public class ShopBackendApiService : IShopBackendApiService
 
     public async Task UpdateProduct(ProductViewModel UpdatedProduct)
     {
-        var content = new StringContent(JsonSerializer.Serialize(UpdatedProduct),
+        var content = new StringContent(JsonConvert.SerializeObject(UpdatedProduct),
             System.Text.Encoding.UTF8, "application/json");
 
         var responseTask = await _httpClient.PutAsync("product", content);
-        responseTask.EnsureSuccessStatusCode();
     }
 }
