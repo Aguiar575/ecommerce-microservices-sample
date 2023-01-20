@@ -14,18 +14,33 @@ public class LogService : ILogService
     public async Task LogInformation(LogRequest request)
     {
         await Task.Run(() => 
-            _logger.LogInformation($"Log Level: Information ApplicationName: {request.ApplicationName} " +
-                                   $"Message: {request.Message} " +
-                                   $"Date: {request.Date}"));
+            _logger.LogInformation(CreateLogMessageWithoutException(request, "Information")));
+    }
+
+    public async Task LogTracing(LogRequest request)
+    {
+        await Task.Run(() => 
+            _logger.LogTrace(CreateLogMessageWithoutException(request, "Tracing")));
+    }
+
+    public async Task LogWarning(LogRequest request)
+    {
+        await Task.Run(() => 
+            _logger.LogWarning(CreateLogMessageWithoutException(request, "Warning")));
     }
 
     public async Task LogError(LogRequest request)
     {
         await Task.Run(() => 
-            _logger.LogError($"Log Level: Information ApplicationName: {request.ApplicationName} " +
+            _logger.LogError($"Log Level: Error ApplicationName: {request.ApplicationName} " +
                                    $"Message: {request.Message} " +
                                    $"InnerMessage: {request.InnerMessage} " +
                                    $"Stacktrace: {request.StackTrace} " +
                                    $"Date: {request.Date}"));
     }
+
+    private string CreateLogMessageWithoutException(LogRequest request, string level) => 
+        $"Log Level: {level} ApplicationName: {request.ApplicationName} " +
+        $"Message: {request.Message} " +
+        $"Date: {request.Date}";
 }

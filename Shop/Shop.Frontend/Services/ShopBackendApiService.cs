@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Shop.Dto;
 using Shop.Models;
+using LoggingCommunicationLibrary.Service;
+using LoggingCommunicationLibrary.Dto;
 
 namespace Shop.Services;
 
@@ -8,67 +10,114 @@ public class ShopBackendApiService : IShopBackendApiService
 {
     private static string _baseUrl = "http://shop-backend-api:80/";
     private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILoggingCommunicationService _loggingSerive;
 
-    public ShopBackendApiService(HttpClient httpClient) 
+    public ShopBackendApiService(
+        IHttpClientFactory httpClientFactory,
+        ILoggingCommunicationService loggingService) 
     {
-        _httpClient = httpClient;
+        _httpClientFactory = httpClientFactory;
+        _loggingSerive = loggingService;
+
+        _httpClient = _httpClientFactory.CreateClient();
         _httpClient.BaseAddress = new Uri(_baseUrl);
+        _loggingSerive.SetHttpClient(_httpClientFactory.CreateClient());
+
     }
 
     public async Task<ProductViewModel?> CreateProduct(ProductCreate product)
     {
         ProductViewModel? productResponse = null;
-        var content = new StringContent(JsonConvert.SerializeObject(product),
-            System.Text.Encoding.UTF8, "application/json");
+        string strinfiedProduct = JsonConvert.SerializeObject(product);
+        StringContent content = CreateStringContent(strinfiedProduct);
 
-        var responseTask = await _httpClient.PostAsync("product", content);
+        HttpResponseMessage responseTask = await _httpClient.PostAsync("product", content);
 
         if (responseTask.IsSuccessStatusCode)
         {
-            var responseJson = await responseTask.Content.ReadAsStringAsync();
-            productResponse = JsonConvert.DeserializeObject<ProductViewModel>(responseJson);
+            await CreateTracingLog($"Product create Successfully: {strinfiedProduct}");
+            productResponse = await SerializeSuccessfullProductCreate(productResponse, responseTask);
         }
 
         return productResponse;
     }
 
-    public async Task DeleteProduct(ulong id) =>
-        await _httpClient.DeleteAsync($"product/{id}");
+    private static async Task<ProductViewModel?> SerializeSuccessfullProductCreate(
+        ProductViewModel? productResponse,
+        HttpResponseMessage responseTask)
+    {
+        var responseJson = await responseTask.Content.ReadAsStringAsync();
+        productResponse = JsonConvert.DeserializeObject<ProductViewModel>(responseJson);
+
+        return productResponse;
+    }
+
+    public async Task<bool> DeleteProduct(ulong id) {
+        HttpResponseMessage responseTask = await _httpClient.DeleteAsync($"product/{id}");
+
+        if (responseTask.IsSuccessStatusCode)
+            await CreateTracingLog($"Product id: {id}, deleted");
+        
+        return responseTask.IsSuccessStatusCode;
+    }
 
     public async Task<ProductViewModel?> GetProduct(ulong id)
     {
-        ProductViewModel? productResponse = null;
+        ProductViewModel? product = null;
+        HttpResponseMessage responseTask = await _httpClient.GetAsync($"product/{id}");
 
-        var responseTask = await _httpClient.GetAsync($"product/{id}");
+        if (responseTask.IsSuccessStatusCode) 
+        {
+            var responseJson = await responseTask.Content.ReadAsStringAsync();
+            product = JsonConvert.DeserializeObject<ProductViewModel>(responseJson);
+        }
 
-        if (responseTask.IsSuccessStatusCode)
-            productResponse = await responseTask.Content.ReadFromJsonAsync<ProductViewModel>();
-
-        return productResponse;
+        return product;
     }
 
     public async Task<IEnumerable<ProductViewModel>> GetProducts()
     {
         List<ProductViewModel> products = new List<ProductViewModel>();
-        var responseTask = await _httpClient.GetAsync("products");
+        HttpResponseMessage responseTask = await _httpClient.GetAsync("products");
 
         if (responseTask.IsSuccessStatusCode)
         {
+            var responseJson = await responseTask.Content.ReadAsStringAsync();
             var productResponse = 
-                await responseTask.Content.ReadFromJsonAsync<IEnumerable<ProductViewModel>>()
+                JsonConvert.DeserializeObject<IEnumerable<ProductViewModel>>(responseJson) 
                 ?? new List<ProductViewModel>();
-
+            
             products.AddRange(productResponse);
         }
 
         return products;
     }
 
-    public async Task UpdateProduct(ProductViewModel UpdatedProduct)
+    public async Task<bool> UpdateProduct(ProductViewModel updatedProduct)
     {
-        var content = new StringContent(JsonConvert.SerializeObject(UpdatedProduct),
+        var content = CreateStringContent(
+            JsonConvert.SerializeObject(updatedProduct));
+
+        HttpResponseMessage responseTask = await _httpClient.PutAsync("product", content);
+
+        if(responseTask.IsSuccessStatusCode)
+            await CreateTracingLog($"Product updated Successfully: {updatedProduct}");        
+
+        return responseTask.IsSuccessStatusCode;
+    }
+    
+    private static StringContent CreateStringContent(string strinfiedContent) => 
+        new StringContent(strinfiedContent,
             System.Text.Encoding.UTF8, "application/json");
 
-        var responseTask = await _httpClient.PutAsync("product", content);
+    private async Task CreateTracingLog(string message)
+    {
+        var logRequest = new LogRequest(
+                        System.AppDomain.CurrentDomain.FriendlyName.ToString(),
+                        $"{message}",
+                        DateTime.Now);
+
+        await _loggingSerive.LogTracing(logRequest);
     }
 }

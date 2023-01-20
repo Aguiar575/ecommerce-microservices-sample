@@ -27,7 +27,54 @@ public class LogServiceTests
                 $"Date: {logRequest.Date}"),
             It.IsAny<Exception>(),
             It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Once);
+    }
 
+    [Fact]
+    public async void LogService_should_Create_Tracing_Level_Log()
+    {
+        var mockIlogger = new Mock<ILogger<LogService>>();
+        var sut = new LogService(mockIlogger.Object);
+        var logRequest = new LogRequest(
+            "TestApplication",
+            "Test message",
+            DateTime.Now);
+
+        await sut.LogTracing(logRequest);
+
+        mockIlogger.Verify(
+        x => x.Log(
+            It.Is<LogLevel>(l => l == LogLevel.Trace),
+            It.IsAny<EventId>(),
+            It.Is<It.IsAnyType>((v, t) =>  
+                v.ToString() == $"Log Level: Tracing ApplicationName: {logRequest.ApplicationName} " +
+                $"Message: {logRequest.Message} " +
+                $"Date: {logRequest.Date}"),
+            It.IsAny<Exception>(),
+            It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Once);
+    }
+
+    [Fact]
+    public async void LogService_should_Create_Warning_Level_Log()
+    {
+        var mockIlogger = new Mock<ILogger<LogService>>();
+        var sut = new LogService(mockIlogger.Object);
+        var logRequest = new LogRequest(
+            "TestApplication",
+            "Test message",
+            DateTime.Now);
+
+        await sut.LogWarning(logRequest);
+
+        mockIlogger.Verify(
+        x => x.Log(
+            It.Is<LogLevel>(l => l == LogLevel.Warning),
+            It.IsAny<EventId>(),
+            It.Is<It.IsAnyType>((v, t) =>  
+                v.ToString() == $"Log Level: Warning ApplicationName: {logRequest.ApplicationName} " +
+                $"Message: {logRequest.Message} " +
+                $"Date: {logRequest.Date}"),
+            It.IsAny<Exception>(),
+            It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Once);
     }
 
     [Fact]
@@ -50,13 +97,12 @@ public class LogServiceTests
             It.IsAny<EventId>(),
             It.Is<It.IsAnyType>((v, t) =>  
                 v.ToString() == 
-                    $"Log Level: Information ApplicationName: {logRequest.ApplicationName} " +
+                    $"Log Level: Error ApplicationName: {logRequest.ApplicationName} " +
                     $"Message: {logRequest.Message} " +
                     $"InnerMessage: {logRequest.InnerMessage} " +
                     $"Stacktrace: {logRequest.StackTrace} " +
                     $"Date: {logRequest.Date}"),
             It.IsAny<Exception>(),
             It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Once);
-
     }
 }

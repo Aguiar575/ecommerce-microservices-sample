@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Shop.Frontend\Shop.Frontend.csproj" />
+    <ProjectReference Include="..\..\LogCommunication\LoggingCommunicationLibrary\LoggingCommunicationLibrary.csproj" />
   </ItemGroup>
 
 </Project>

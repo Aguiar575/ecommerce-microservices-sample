@@ -19,10 +19,10 @@ public class UnitTeLoggingCommunicationServiceTests
                 StatusCode = HttpStatusCode.OK
             });
         
-        var sut = new LoggingCommunicationService(
-            new HttpClient(mockMessageHandler.Object));
+        var sut = new LoggingCommunicationService();
+        sut.SetHttpClient(new HttpClient(mockMessageHandler.Object));
         
-        var request = new InfoLogRequest("ApplicationName",
+        var request = new LogRequest("ApplicationName",
             "message",
             DateTime.Now);
 
@@ -42,10 +42,10 @@ public class UnitTeLoggingCommunicationServiceTests
                 StatusCode = HttpStatusCode.InternalServerError
             });
         
-        var sut = new LoggingCommunicationService(
-            new HttpClient(mockMessageHandler.Object));
+        var sut = new LoggingCommunicationService();
+        sut.SetHttpClient(new HttpClient(mockMessageHandler.Object));
         
-        var request = new InfoLogRequest("ApplicationName",
+        var request = new LogRequest("ApplicationName",
             "message",
             DateTime.Now);
 
@@ -65,8 +65,8 @@ public class UnitTeLoggingCommunicationServiceTests
                 StatusCode = HttpStatusCode.OK
             });
         
-        var sut = new LoggingCommunicationService(
-            new HttpClient(mockMessageHandler.Object));
+        var sut = new LoggingCommunicationService();
+        sut.SetHttpClient(new HttpClient(mockMessageHandler.Object));
         
         var request = new ErrorLogRequest("ApplicationName",
             "message",
@@ -90,8 +90,8 @@ public class UnitTeLoggingCommunicationServiceTests
                 StatusCode = HttpStatusCode.InternalServerError
             });
         
-        var sut = new LoggingCommunicationService(
-            new HttpClient(mockMessageHandler.Object));
+        var sut = new LoggingCommunicationService();
+        sut.SetHttpClient(new HttpClient(mockMessageHandler.Object));
         
         var request = new ErrorLogRequest("ApplicationName",
             "message",
@@ -101,5 +101,20 @@ public class UnitTeLoggingCommunicationServiceTests
 
         bool responseTask = await sut.LogError(request);
         Assert.True(!responseTask);
+    }
+
+    [Fact]
+    public async Task LoggingCommunicationService_Should_Throw_InvalidOperationException_If_HttpClient_Is_Null()
+    {
+        var sut = new LoggingCommunicationService();
+
+        var request = new ErrorLogRequest("ApplicationName",
+            "message",
+            "InnerMessage",
+            "StackTrace",
+            DateTime.Now);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(
+            () => sut.LogError(request));
     }
 }

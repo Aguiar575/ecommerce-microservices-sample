@@ -1,0 +1,16 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+
+WORKDIR /App
+COPY ./LogCommunication/LoggingCommunicationLibrary ./LogCommunication/LoggingCommunicationLibrary
+COPY ./Shop/Shop.Frontend ./Shop/Shop.Frontend
+RUN pwd && ls -la
+
+WORKDIR /App/Shop/Shop.Frontend
+RUN dotnet restore
+RUN dotnet publish -c Release -o ../../out
+RUN pwd && ls -la
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+WORKDIR /App
+COPY --from=build-env /App/out .
+ENTRYPOINT ["dotnet", "Shop.Frontend.dll"]

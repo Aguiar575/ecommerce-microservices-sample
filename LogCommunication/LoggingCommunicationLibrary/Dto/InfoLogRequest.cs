@@ -1,8 +1,6 @@
-using System;
-
 namespace LoggingCommunicationLibrary.Dto;
 
-public record struct InfoLogRequest(
+public record struct LogRequest(
     string applicationName,
     string message,
     DateTime dateTime);

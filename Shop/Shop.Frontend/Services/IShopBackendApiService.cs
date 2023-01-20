@@ -6,8 +6,8 @@ namespace Shop.Services;
 public interface IShopBackendApiService
 {
     Task<ProductViewModel?> CreateProduct(ProductCreate product);
-    Task DeleteProduct(ulong id);
-    Task UpdateProduct(ProductViewModel UpdatedProduct);
+    Task<bool> DeleteProduct(ulong id);
+    Task<bool> UpdateProduct(ProductViewModel updatedProduct);
     Task<ProductViewModel?> GetProduct(ulong id);
     Task<IEnumerable<ProductViewModel>> GetProducts();
 }
