@@ -1,4 +1,4 @@
-﻿using Shop.Dto;
+﻿using Shop.Frontend.Dto;
 using Shop.Models;
 
 namespace Shop.Services;

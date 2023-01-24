@@ -1,8 +1,8 @@
-using System.Linq.Expressions;
 using AutoMapper;
 using Shop.Backend.Api.Dto;
-using Shop.Backend.Api.Infrastructure;
 using Shop.Backend.Api.Models;
+using System.Linq.Expressions;
+using Shop.Backend.Api.Infrastructure;
 
 namespace Shop.Backend.Api.Services;
 

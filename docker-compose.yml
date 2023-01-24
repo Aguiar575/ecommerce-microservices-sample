@@ -30,6 +30,7 @@ services:
       - 8084:80
     networks:
       - elastic
+      - kibana
     depends_on: 
       - elasticsearch
       - kibana
@@ -55,15 +56,45 @@ services:
       - "80"
 
   shop-backend-api:
+    image: shop-backend-api-nginx
+    build:
+      context: .
+    ports:
+      - "20000:80"
+    depends_on:
+      - shop-backend-api01
+      - shop-backend-api02
+    networks:
+      - shop-backend-network
+
+  shop-backend-api01:
     image: shop-backend-api
     ports: 
       - 8082:80
-    networks: 
+    networks:
+      - shop-backend-network
       - shop-env  
       - snowflake-id
       - kibana
-    expose: 
-      - "80"
+    depends_on:
+      - sql-server
+      - snowflake-factory
+    environment:
+      - "SqlServerCredentials:Server=sql-server"
+      - "SqlServerCredentials:Port=1433"
+      - "SqlServerCredentials:Schema=ShopDb"
+      - "SqlServerCredentials:User=sa"
+      - "SqlServerCredentials:Password=Str#ng_Passw#rd"
+
+  shop-backend-api02:
+    image: shop-backend-api
+    ports: 
+      - 8083:80
+    networks: 
+      - shop-backend-network
+      - shop-env  
+      - snowflake-id
+      - kibana
     depends_on:
       - sql-server
       - snowflake-factory
@@ -77,9 +108,11 @@ services:
   shop-frontend:
     image: shop-frontend
     ports: 
-      - 8083:80
+      - 8085:80
     networks: 
+      - kibana
       - shop-env
+      - shop-backend-network
     depends_on:
       - shop-backend-api
     environment:
@@ -89,5 +122,8 @@ networks:
   shop-env:
   snowflake-id:
   kibana:
+    driver: bridge
   elastic:
     driver: bridge
+  shop-backend-network:
+      driver: bridge

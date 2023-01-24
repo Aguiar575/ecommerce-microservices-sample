@@ -6,7 +6,7 @@ namespace LoggingCommunicationLibrary.Service;
 public class LoggingCommunicationService : ILoggingCommunicationService
 {
     private HttpClient? _httpClient;
-    private static string _baseUrl = "http://testing-url:80/";
+    private static string _baseUrl = "http://log-service:80/";
 
     public void SetHttpClient(HttpClient httpClient) 
     {

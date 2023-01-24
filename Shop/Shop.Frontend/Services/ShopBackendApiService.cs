@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Shop.Dto;
 using Shop.Models;
 using LoggingCommunicationLibrary.Service;
 using LoggingCommunicationLibrary.Dto;
+using Shop.Frontend.Dto;
 
 namespace Shop.Services;
 
@@ -14,11 +14,10 @@ public class ShopBackendApiService : IShopBackendApiService
     private readonly ILoggingCommunicationService _loggingSerive;
 
     public ShopBackendApiService(
-        IHttpClientFactory httpClientFactory,
-        ILoggingCommunicationService loggingService) 
+        IHttpClientFactory httpClientFactory) 
     {
         _httpClientFactory = httpClientFactory;
-        _loggingSerive = loggingService;
+        _loggingSerive = new LoggingCommunicationService();
 
         _httpClient = _httpClientFactory.CreateClient();
         _httpClient.BaseAddress = new Uri(_baseUrl);

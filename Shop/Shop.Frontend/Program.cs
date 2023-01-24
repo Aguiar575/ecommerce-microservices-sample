@@ -6,8 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddTransient<IShopBackendApiService, ShopBackendApiService>();
 builder.Services.AddHttpClient<IShopBackendApiService, ShopBackendApiService>();
+builder.Services.AddTransient<IShopBackendApiService, ShopBackendApiService>();
 
 var app = builder.Build();
 
