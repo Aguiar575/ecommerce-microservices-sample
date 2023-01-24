@@ -8,7 +8,7 @@ namespace Shop.Services;
 
 public class ShopBackendApiService : IShopBackendApiService
 {
-    private static string _baseUrl = "http://shop-backend-api:80/";
+    private static string _baseUrl = "http://shop-catalog-proxy:80/";
     private readonly HttpClient _httpClient;
     private readonly IHttpClientFactory _httpClientFactory;
     private ILoggingCommunicationService _loggingService;

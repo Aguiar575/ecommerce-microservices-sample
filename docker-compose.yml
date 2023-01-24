@@ -55,24 +55,24 @@ services:
     expose: 
       - "80"
 
-  shop-backend-api:
-    image: shop-backend-api-nginx
+  shop-catalog-proxy:
+    image: shop-catalog-proxy
     build:
       context: .
     ports:
       - "20000:80"
     depends_on:
-      - shop-backend-api01
-      - shop-backend-api02
+      - shop-catalog-api01
+      - shop-catalog-api02
     networks:
-      - shop-backend-network
+      - shop-catalog-network
 
-  shop-backend-api01:
-    image: shop-backend-api
+  shop-catalog-api01:
+    image: shop-catalog-api
     ports: 
       - 8082:80
     networks:
-      - shop-backend-network
+      - shop-catalog-network
       - shop-env  
       - snowflake-id
       - kibana
@@ -86,12 +86,12 @@ services:
       - "SqlServerCredentials:User=sa"
       - "SqlServerCredentials:Password=Str#ng_Passw#rd"
 
-  shop-backend-api02:
-    image: shop-backend-api
+  shop-catalog-api02:
+    image: shop-catalog-api
     ports: 
       - 8083:80
     networks: 
-      - shop-backend-network
+      - shop-catalog-network
       - shop-env  
       - snowflake-id
       - kibana
@@ -112,9 +112,9 @@ services:
     networks: 
       - kibana
       - shop-env
-      - shop-backend-network
+      - shop-catalog-network
     depends_on:
-      - shop-backend-api
+      - shop-catalog-proxy
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
 
@@ -125,5 +125,5 @@ networks:
     driver: bridge
   elastic:
     driver: bridge
-  shop-backend-network:
+  shop-catalog-network:
       driver: bridge
