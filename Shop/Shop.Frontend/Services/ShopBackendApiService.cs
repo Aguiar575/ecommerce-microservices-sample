@@ -11,18 +11,22 @@ public class ShopBackendApiService : IShopBackendApiService
     private static string _baseUrl = "http://shop-backend-api:80/";
     private readonly HttpClient _httpClient;
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ILoggingCommunicationService _loggingSerive;
+    private ILoggingCommunicationService _loggingService;
 
-    public ShopBackendApiService(
-        IHttpClientFactory httpClientFactory) 
+    public ShopBackendApiService(IHttpClientFactory httpClientFactory) 
     {
         _httpClientFactory = httpClientFactory;
-        _loggingSerive = new LoggingCommunicationService();
 
         _httpClient = _httpClientFactory.CreateClient();
         _httpClient.BaseAddress = new Uri(_baseUrl);
-        _loggingSerive.SetHttpClient(_httpClientFactory.CreateClient());
 
+        SetLoggingService(new LoggingCommunicationService());
+    }
+
+    public void SetLoggingService(ILoggingCommunicationService service) 
+    {
+        _loggingService = service;
+        _loggingService.SetHttpClient(_httpClientFactory.CreateClient());
     }
 
     public async Task<ProductViewModel?> CreateProduct(ProductCreate product)
@@ -117,6 +121,6 @@ public class ShopBackendApiService : IShopBackendApiService
                         $"{message}",
                         DateTime.Now);
 
-        await _loggingSerive.LogTracing(logRequest);
+        await _loggingService.LogTracing(logRequest);
     }
 }

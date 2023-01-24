@@ -5,37 +5,38 @@ using Serilog.Sinks.Elasticsearch;
 
 namespace LoggingService.Api.Infrastructure;
 
-public static class LogConfiguration {
-public static void ConfigureLogging()
+public static class LogConfiguration
 {
-    var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-    var configuration = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-        .AddJsonFile(
-            $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
-            optional: true)
-        .Build();
-
-    Log.Logger = new LoggerConfiguration()
-        .Enrich.FromLogContext()
-        .Enrich.WithExceptionDetails()
-        .WriteTo.Debug()
-        .WriteTo.Console()
-        .WriteTo.Elasticsearch(ConfigureElasticSink(configuration, environment))
-        .Enrich.WithProperty("Environment", environment)
-        .ReadFrom.Configuration(configuration)
-        .CreateLogger();
-}
-
-private static ElasticsearchSinkOptions ConfigureElasticSink(
-    IConfigurationRoot configuration,
-    string environment)
-{
-    return new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
+    public static void ConfigureLogging()
     {
-        AutoRegisterTemplate = true,
-        IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}" +
-        $"-logs-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
-    };
-}
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile(
+                $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
+                optional: true)
+            .Build();
+
+        Log.Logger = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .Enrich.WithExceptionDetails()
+            .WriteTo.Debug()
+            .WriteTo.Console()
+            .WriteTo.Elasticsearch(ConfigureElasticSink(configuration, environment))
+            .Enrich.WithProperty("Environment", environment)
+            .ReadFrom.Configuration(configuration)
+            .CreateLogger();
+    }
+
+    private static ElasticsearchSinkOptions ConfigureElasticSink(
+        IConfigurationRoot configuration,
+        string environment)
+    {
+        return new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
+        {
+            AutoRegisterTemplate = true,
+            IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}" +
+            $"logs-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
+        };
+    }
 }

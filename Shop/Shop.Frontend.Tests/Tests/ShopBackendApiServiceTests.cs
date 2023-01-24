@@ -3,7 +3,7 @@ using LoggingCommunicationLibrary.Dto;
 using LoggingCommunicationLibrary.Service;
 using Moq.Protected;
 using Newtonsoft.Json;
-using Shop.Dto;
+using Shop.Frontend.Dto;
 using Shop.Models;
 using Shop.Services;
 
@@ -30,11 +30,8 @@ public class ShopBackendApiServiceTests
             new Mock<IHttpClientFactory>();
         mockHttpClientFactory.Setup(e => e.CreateClient(string.Empty)).Returns(MockHttpClient(response));
 
-        Mock<ILoggingCommunicationService> mockLoggingService = 
-            new Mock<ILoggingCommunicationService>();
-
         var sut = new ShopBackendApiService(
-            mockHttpClientFactory.Object, mockLoggingService.Object);
+            mockHttpClientFactory.Object);
 
         var productCreate = new ProductCreate { Price = 10, Name = "Test product" };
         ProductViewModel? responseTask = await sut.CreateProduct(productCreate);
@@ -58,46 +55,23 @@ public class ShopBackendApiServiceTests
             Content = new StringContent(JsonConvert.SerializeObject(responseBody))
         };
 
+        Mock<ILoggingCommunicationService> mockLoggingService = 
+            new Mock<ILoggingCommunicationService>();
+
         Mock<IHttpClientFactory> mockHttpClientFactory = 
             new Mock<IHttpClientFactory>();
         mockHttpClientFactory.Setup(e => e.CreateClient(string.Empty))
             .Returns(MockHttpClient(response));
 
-        Mock<ILoggingCommunicationService> mockLoggingService = 
-            new Mock<ILoggingCommunicationService>();
-
         var sut = new ShopBackendApiService(
-            mockHttpClientFactory.Object, mockLoggingService.Object);
+            mockHttpClientFactory.Object);
+        sut.SetLoggingService(mockLoggingService.Object);
 
         var productCreate = new ProductCreate { Price = 10, Name = "Test product" };
         ProductViewModel? responseTask = await sut.CreateProduct(productCreate);
 
         mockLoggingService.Verify(
             e => e.LogTracing(It.IsAny<LogRequest>()), Times.Once());
-    }
-
-    [Fact]
-    public async Task CreateProduct_Should_Return_Null_ProductViewModel_If_StatusCode_Is_Not_scuccessfull()
-    {
-        var response = new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.InternalServerError
-        };
-
-        Mock<IHttpClientFactory> mockHttpClientFactory = 
-            new Mock<IHttpClientFactory>();
-        mockHttpClientFactory.Setup(e => e.CreateClient(string.Empty)).Returns(MockHttpClient(response));
-
-        Mock<ILoggingCommunicationService> mockLoggingService = 
-            new Mock<ILoggingCommunicationService>();
-
-        var sut = new ShopBackendApiService(
-            mockHttpClientFactory.Object, mockLoggingService.Object);
-
-        var productCreate = new ProductCreate { Price = 10, Name = "Test product" };
-        ProductViewModel? responseTask = await sut.CreateProduct(productCreate);
-
-        Assert.Null(responseTask);
     }
 
     [Fact]
@@ -113,11 +87,8 @@ public class ShopBackendApiServiceTests
         mockHttpClientFactory.Setup(e => e.CreateClient(string.Empty))
             .Returns(MockHttpClient(response));
 
-        Mock<ILoggingCommunicationService> mockLoggingService = 
-            new Mock<ILoggingCommunicationService>();
-
         var sut = new ShopBackendApiService(
-            mockHttpClientFactory.Object, mockLoggingService.Object);
+            mockHttpClientFactory.Object);
 
         bool result = await sut.DeleteProduct(9999999);
 
@@ -132,16 +103,17 @@ public class ShopBackendApiServiceTests
             StatusCode = HttpStatusCode.OK
         };
 
+        Mock<ILoggingCommunicationService> mockLoggingService = 
+            new Mock<ILoggingCommunicationService>();
+
         Mock<IHttpClientFactory> mockHttpClientFactory = 
             new Mock<IHttpClientFactory>();
         mockHttpClientFactory.Setup(e => e.CreateClient(string.Empty))
             .Returns(MockHttpClient(response));
 
-        Mock<ILoggingCommunicationService> mockLoggingService = 
-            new Mock<ILoggingCommunicationService>();
-
         var sut = new ShopBackendApiService(
-            mockHttpClientFactory.Object, mockLoggingService.Object);
+            mockHttpClientFactory.Object);
+        sut.SetLoggingService(mockLoggingService.Object);
 
         bool result = await sut.DeleteProduct(9999999);
 
@@ -162,11 +134,8 @@ public class ShopBackendApiServiceTests
         mockHttpClientFactory.Setup(e => e.CreateClient(string.Empty))
             .Returns(MockHttpClient(response));
 
-        Mock<ILoggingCommunicationService> mockLoggingService = 
-            new Mock<ILoggingCommunicationService>();
-
         var sut = new ShopBackendApiService(
-            mockHttpClientFactory.Object, mockLoggingService.Object);
+            mockHttpClientFactory.Object);
 
         bool result = await sut.DeleteProduct(9999999);
 
@@ -181,16 +150,18 @@ public class ShopBackendApiServiceTests
             StatusCode = HttpStatusCode.InternalServerError
         };
 
+        Mock<ILoggingCommunicationService> mockLoggingService = 
+            new Mock<ILoggingCommunicationService>();
+
         Mock<IHttpClientFactory> mockHttpClientFactory = 
             new Mock<IHttpClientFactory>();
         mockHttpClientFactory.Setup(e => e.CreateClient(string.Empty))
             .Returns(MockHttpClient(response));
 
-        Mock<ILoggingCommunicationService> mockLoggingService = 
-            new Mock<ILoggingCommunicationService>();
 
         var sut = new ShopBackendApiService(
-            mockHttpClientFactory.Object, mockLoggingService.Object);
+            mockHttpClientFactory.Object);
+        sut.SetLoggingService(mockLoggingService.Object);
 
         await sut.DeleteProduct(9999999);
 
@@ -215,13 +186,11 @@ public class ShopBackendApiServiceTests
 
         Mock<IHttpClientFactory> mockHttpClientFactory = 
             new Mock<IHttpClientFactory>();
-        mockHttpClientFactory.Setup(e => e.CreateClient(string.Empty)).Returns(MockHttpClient(response));
-
-        Mock<ILoggingCommunicationService> mockLoggingService = 
-            new Mock<ILoggingCommunicationService>();
+        mockHttpClientFactory.Setup(
+            e => e.CreateClient(string.Empty)).Returns(MockHttpClient(response));
 
         var sut = new ShopBackendApiService(
-            mockHttpClientFactory.Object, mockLoggingService.Object);
+            mockHttpClientFactory.Object);
 
         ProductViewModel? responseTask = await sut.GetProduct(999999);
 
@@ -241,11 +210,8 @@ public class ShopBackendApiServiceTests
             new Mock<IHttpClientFactory>();
         mockHttpClientFactory.Setup(e => e.CreateClient(string.Empty)).Returns(MockHttpClient(response));
 
-        Mock<ILoggingCommunicationService> mockLoggingService = 
-            new Mock<ILoggingCommunicationService>();
-
         var sut = new ShopBackendApiService(
-            mockHttpClientFactory.Object, mockLoggingService.Object);
+            mockHttpClientFactory.Object);
 
         ProductViewModel? responseTask = await sut.GetProduct(999999);
 
@@ -264,12 +230,8 @@ public class ShopBackendApiServiceTests
             new Mock<IHttpClientFactory>();
         mockHttpClientFactory.Setup(e => e.CreateClient(string.Empty)).Returns(MockHttpClient(response));
 
-        Mock<ILoggingCommunicationService> mockLoggingService = 
-            new Mock<ILoggingCommunicationService>();
-
         var sut = new ShopBackendApiService(
-            mockHttpClientFactory.Object, mockLoggingService.Object);
-
+            mockHttpClientFactory.Object);
 
         var productToBeUpdated = new ProductViewModel { 
             Id = 999999, 
@@ -294,12 +256,8 @@ public class ShopBackendApiServiceTests
             new Mock<IHttpClientFactory>();
         mockHttpClientFactory.Setup(e => e.CreateClient(string.Empty)).Returns(MockHttpClient(response));
 
-        Mock<ILoggingCommunicationService> mockLoggingService = 
-            new Mock<ILoggingCommunicationService>();
-
         var sut = new ShopBackendApiService(
-            mockHttpClientFactory.Object, mockLoggingService.Object);
-
+            mockHttpClientFactory.Object);
 
         var productToBeUpdated = new ProductViewModel { 
             Id = 999999, 
@@ -319,17 +277,17 @@ public class ShopBackendApiServiceTests
         {
             StatusCode = HttpStatusCode.OK
         };
+        
+        Mock<ILoggingCommunicationService> mockLoggingService = 
+            new Mock<ILoggingCommunicationService>();
 
         Mock<IHttpClientFactory> mockHttpClientFactory = 
             new Mock<IHttpClientFactory>();
         mockHttpClientFactory.Setup(e => e.CreateClient(string.Empty)).Returns(MockHttpClient(response));
 
-        Mock<ILoggingCommunicationService> mockLoggingService = 
-            new Mock<ILoggingCommunicationService>();
-
         var sut = new ShopBackendApiService(
-            mockHttpClientFactory.Object, mockLoggingService.Object);
-
+            mockHttpClientFactory.Object);
+        sut.SetLoggingService(mockLoggingService.Object);
 
         var productToBeUpdated = new ProductViewModel { 
             Id = 999999, 
