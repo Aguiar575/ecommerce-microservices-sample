@@ -34,6 +34,8 @@ services:
     depends_on: 
       - elasticsearch
       - kibana
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
 
   sql-server: 
     image: mcr.microsoft.com/azure-sql-edge:latest
@@ -54,6 +56,8 @@ services:
       - snowflake-id  
     expose: 
       - "80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
 
   shop-catalog-proxy:
     image: shop-catalog-proxy
@@ -80,6 +84,7 @@ services:
       - sql-server
       - snowflake-factory
     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
       - "SqlServerCredentials:Server=sql-server"
       - "SqlServerCredentials:Port=1433"
       - "SqlServerCredentials:Schema=ShopDb"
@@ -99,6 +104,7 @@ services:
       - sql-server
       - snowflake-factory
     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
       - "SqlServerCredentials:Server=sql-server"
       - "SqlServerCredentials:Port=1433"
       - "SqlServerCredentials:Schema=ShopDb"
